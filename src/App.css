@@ -1,0 +1,17 @@
+.simple-stage {
+  padding: 16px;
+  background: #f0f0f0;
+  border-radius: 8px;
+  font-family: sans-serif;
+}
+
+.simple-stage h3 {
+  margin-top: 0;
+}
+
+.simple-stage blockquote {
+  background: white;
+  padding: 8px;
+  border-left: 4px solid #ccc;
+  margin: 8px 0;
+}

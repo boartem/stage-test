@@ -1,13 +1,53 @@
-import {ReactRunner} from "@chub-ai/stages-ts";
-import {Stage} from "./Stage";
-import {TestStageRunner} from "./TestRunner";
+import React from 'react';
+import { Stage, StageProps } from '@chub-ai/stages-ts';
+import './App.css';
 
-function App() {
-  const isDev = import.meta.env.MODE === 'development';
-  console.info(`Running in ${import.meta.env.MODE}`);
+class MySimpleStage extends Stage {
+  // Глобальное состояние (сохраняется между сообщениями)
+  private messageCount: number = 0;
 
-  return isDev ? <TestStageRunner factory={ (data: any) => new Stage(data) }/> :
-      <ReactRunner factory={(data: any) => new Stage(data)} />;
+  // Инициализация stage
+  initialize = async (props: StageProps) => {
+    // Здесь можно загрузить конфиг или инициализировать данные
+    console.log('Stage initialized');
+  };
+
+  // Перед отправкой промпта в LLM
+  beforePrompt = async (props: StageProps) => {
+    return {
+      // Можно модифицировать промпт или добавить system messages
+      systemMessages: [],
+      messageState: { count: this.messageCount },
+    };
+  };
+
+  // После получения ответа от LLM
+  afterResponse = async (props: StageProps) => {
+    this.messageCount += 1; // Увеличиваем счётчик
+
+    return {
+      systemMessages: [`Счётчик сообщений: ${this.messageCount}`],
+      messageState: { count: this.messageCount },
+    };
+  };
+
+  // Рендер UI (вызывается часто)
+  render = (props: StageProps) => {
+    const { messages, messageState } = props;
+    const lastMessage = messages[messages.length - 1]?.content || 'Нет сообщений';
+    const count = messageState?.count || 0;
+
+    return (
+      <div className="simple-stage">
+        <h3>Простой Stage</h3>
+        <p>Последнее сообщение:</p>
+        <blockquote>{lastMessage}</blockquote>
+        <p>Всего сообщений: {count}</p>
+      </div>
+    );
+  };
 }
 
-export default App
+export default function App() {
+  return <MySimpleStage />;
+}
