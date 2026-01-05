@@ -1,16 +1,16 @@
-import { Stage as BaseStage, StageProps } from '@chub-ai/stages-ts';
+import { StageBase, StageProps } from '@chub-ai/stages-ts';
 import React from 'react';
 
-export class Stage extends BaseStage {
-  // Глобальное состояние stage (сохраняется между сообщениями)
+export class Stage extends StageBase {
+  // Глобальное состояние (chat state)
   private messageCount: number = 0;
 
-  // Инициализация (вызывается один раз при загрузке)
   initialize = async (props: StageProps) => {
     console.log('Stage initialized');
+    // Можно вернуть initState, если нужно
+    return {};
   };
 
-  // Перед отправкой промпта в LLM
   beforePrompt = async (props: StageProps) => {
     return {
       systemMessages: [],
@@ -18,7 +18,6 @@ export class Stage extends BaseStage {
     };
   };
 
-  // После получения ответа от LLM
   afterResponse = async (props: StageProps) => {
     this.messageCount += 1;
 
@@ -28,11 +27,10 @@ export class Stage extends BaseStage {
     };
   };
 
-  // Рендер UI — основной вид stage
   render = (props: StageProps) => {
     const { messages, messageState } = props;
     const lastMessage = messages[messages.length - 1]?.content || 'Нет сообщений';
-    const count = messageState?.count ?? 0;
+    const count = (messageState as { count?: number } )?.count ?? 0;
 
     return (
       <div className="simple-stage">
