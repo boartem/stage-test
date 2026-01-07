@@ -1,13 +1,11 @@
-import { StageBase, StageProps } from '@chub-ai/stages-ts';
+import { Stage, StageProps } from '@chub-ai/stages-ts';
 import React from 'react';
 
-// Измените имя класса на MyStage или любое другое, кроме Stage!
-export class MyStage extends StageBase {
+export class Stage extends Stage {
   private messageCount: number = 0;
 
   initialize = async (props: StageProps) => {
     console.log('Stage initialized');
-    return {}; // Можно вернуть initial initState, если нужно
   };
 
   beforePrompt = async (props: StageProps) => {
