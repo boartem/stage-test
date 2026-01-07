@@ -1,24 +1,13 @@
 import { StageBase, StageProps } from '@chub-ai/stages-ts';
 import React from 'react';
 
-export class SimpleStage extends StageBase {
+// Измените имя класса на MyStage или любое другое, кроме Stage!
+export class MyStage extends StageBase {
   private messageCount: number = 0;
-
-  load = async (props: StageProps) => {
-    console.log('Stage load called');
-    return { initState: {} };
-  };
 
   initialize = async (props: StageProps) => {
     console.log('Stage initialized');
-    return {};
-  };
-  
-  setState = async (state: { count?: number }) => {
-    if (state.count !== undefined) {
-      this.messageCount = state.count;
-    }
-    return {};
+    return {}; // Можно вернуть initial initState, если нужно
   };
 
   beforePrompt = async (props: StageProps) => {
@@ -37,17 +26,9 @@ export class SimpleStage extends StageBase {
     };
   };
 
-  render = (props: StageProps | undefined) => {
-    if (!props) {
-      return <div>Загрузка stage...</div>;
-    }
-
-    const { messages = [], messageState = {} } = props;
-
-    const lastMessage = messages.length > 0 
-      ? messages[messages.length - 1]?.content || 'Нет сообщений' 
-      : 'Нет сообщений';
-
+  render = (props: StageProps) => {
+    const { messages, messageState } = props;
+    const lastMessage = messages[messages.length - 1]?.content || 'Нет сообщений';
     const count = (messageState as { count?: number })?.count ?? 0;
 
     return (
